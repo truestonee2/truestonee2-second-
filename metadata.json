@@ -1,0 +1,5 @@
+{
+  "name": "AI Video Prompt Factory",
+  "description": "An AI-powered prompt generator for creating 6-10 second, 10-cut short-form videos for models like Sora and Veo, co-produced by AI Jason and Human Stone.",
+  "requestFramePermissions": []
+}

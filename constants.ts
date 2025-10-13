@@ -1,0 +1,132 @@
+export const UI_TEXTS = {
+  ko: {
+    header: {
+      title: "AI 영상 프롬프트 제작소",
+      subtitle: "천재 AI 프로듀서 제이슨 & 더천재 인간 프로듀서 스톤",
+    },
+    form: {
+      subject: "주제",
+      subjectPlaceholder: "예: 스케이트보드를 타는 고양이",
+      style: "스타일",
+      setting: "배경",
+      settingPlaceholder: "예: 밤의 네오-서울 거리",
+      colorPalette: "색상 팔레트",
+      colorPalettePlaceholder: "예: 생생한 네온, 사이버펑크",
+      music: "음악",
+      musicPlaceholder: "예: 웅장한 오케스트라, Lo-fi 힙합 비트",
+      soundEffects: "음향 효과",
+      soundEffectsPlaceholder: "예: 도시 소음, 빗소리, 고양이 야옹 소리",
+      dialogue: "대화 / 나레이션",
+      addDialogueLine: "대사 추가",
+      speakerPlaceholder: "예: 인물 A, 나레이터",
+      linePlaceholder: "대사를 입력하거나 AI 제안을 사용하세요.",
+      dialogueSuggestion: "AI 대화 생성",
+      videoLength: "영상 길이 (초)",
+      aspectRatio: "화면 비율",
+      generateButton: "프롬프트 생성",
+      generatingButton: "생성 중...",
+      shots: "컷 상세 설정 (10컷)",
+      shotLabel: "컷",
+      randomizeButton: "랜덤 앵글 추천",
+    },
+    output: {
+      title: "생성된 프롬프트",
+      copyButton: "복사",
+      copiedButton: "복사됨!",
+      jsonTab: "JSON 결과",
+      promptTab: "통합 프롬프트",
+      waiting: "아래 양식을 입력하고 '프롬프트 생성'을 클릭하여 시작하세요.",
+      loading: "AI 프로듀서 제이슨이 창의력을 발휘하는 중...",
+    },
+    error: {
+      title: "오류가 발생했습니다",
+      geminiError: "Gemini API에서 응답을 받지 못했습니다. API 키를 확인하거나 나중에 다시 시도해주세요.",
+      unknown: "알 수 없는 오류가 발생했습니다.",
+    },
+    footer: {
+      credit: "Sora + Veo 통합용",
+    }
+  },
+  en: {
+    header: {
+      title: "AI Video Prompt Factory",
+      subtitle: "By Genius AI Producer Jason & Super Genius Human Producer Stone",
+    },
+    form: {
+      subject: "Subject",
+      subjectPlaceholder: "e.g., A cat riding a skateboard",
+      style: "Style",
+      setting: "Setting",
+      settingPlaceholder: "e.g., Streets of Neo-Seoul at night",
+      colorPalette: "Color Palette",
+      colorPalettePlaceholder: "e.g., Vibrant neon, cyberpunk",
+      music: "Music",
+      musicPlaceholder: "e.g., Epic orchestral score, Lo-fi hip-hop beat",
+      soundEffects: "Sound Effects",
+      soundEffectsPlaceholder: "e.g., City ambiance, rain sounds, cat meow",
+      dialogue: "Dialogue / Narration",
+      addDialogueLine: "Add Line",
+      speakerPlaceholder: "e.g., Character A, Narrator",
+      linePlaceholder: "Enter dialogue or use AI suggestion.",
+      dialogueSuggestion: "Generate AI Dialogue",
+      videoLength: "Video Length (seconds)",
+      aspectRatio: "Aspect Ratio",
+      generateButton: "Generate Prompt",
+      generatingButton: "Generating...",
+      shots: "Shot Details (10 Cuts)",
+      shotLabel: "Cut",
+      randomizeButton: "Suggest Random Angles",
+    },
+    output: {
+      title: "Generated Prompt",
+      copyButton: "Copy",
+      copiedButton: "Copied!",
+      jsonTab: "JSON Result",
+      promptTab: "Combined Prompt",
+      waiting: "Fill out the form below and click 'Generate Prompt' to begin.",
+      loading: "AI Producer Jason is working his creative magic...",
+    },
+    error: {
+      title: "An Error Occurred",
+      geminiError: "Failed to get a response from the Gemini API. Please check your API key or try again later.",
+      unknown: "An unknown error occurred.",
+    },
+    footer: {
+      credit: "For Sora + Veo Integration",
+    }
+  },
+};
+
+export const ART_STYLES = [
+  { value: "cinematic", ko: "시네마틱", en: "Cinematic" },
+  { value: "photorealistic", ko: "사진처럼 사실적인", en: "Photorealistic" },
+  { value: "anime", ko: "애니메이션", en: "Anime" },
+  { value: "fantasy art", ko: "판타지 아트", en: "Fantasy Art" },
+  { value: "8-bit pixel art", ko: "8비트 픽셀 아트", en: "8-bit Pixel Art" },
+  { value: "watercolor", ko: "수채화", en: "Watercolor" },
+  { value: "claymation", ko: "클레이메이션", en: "Claymation" },
+  { value: "vlog style", ko: "브이로그 스타일", en: "Vlog Style" },
+];
+
+export const CAMERA_ANGLES = [
+  { value: "wide shot", ko: "와이드 샷", en: "Wide Shot" },
+  { value: "close-up", ko: "클로즈업", en: "Close-up" },
+  { value: "medium shot", ko: "미디엄 샷", en: "Medium Shot" },
+  { value: "dutch angle", ko: "더치 앵글", en: "Dutch Angle" },
+  { value: "drone shot", ko: "드론 샷", en: "Drone Shot" },
+  { value: "first-person view", ko: "1인칭 시점", en: "First-Person View" },
+  { value: "low angle shot", ko: "로우 앵글 샷", en: "Low Angle Shot" },
+  { value: "high angle shot", ko: "하이 앵글 샷", en: "High Angle Shot" },
+  { value: "dolly zoom", ko: "돌리 줌", en: "Dolly Zoom" },
+  { value: "panning shot", ko: "패닝 샷", en: "Panning Shot" },
+  { value: "tracking shot", ko: "트래킹 샷", en: "Tracking Shot" },
+  { value: "handheld shaky cam", ko: "핸드헬드 카메라", en: "Handheld Shaky Cam" },
+];
+
+export const ASPECT_RATIOS = [
+  { value: "9:16", label: "9:16 (Vertical)" },
+  { value: "16:9", label: "16:9 (Horizontal)" },
+  { value: "1:1", label: "1:1 (Square)" },
+];
+
+export const SHOT_COUNT = 10;
