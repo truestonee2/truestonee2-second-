@@ -7,6 +7,7 @@ import { ShuffleIcon } from './icons/ShuffleIcon';
 import { SparklesIcon } from './icons/SparklesIcon';
 import { PlusIcon } from './icons/PlusIcon';
 import { TrashIcon } from './icons/TrashIcon';
+import { RotateCcwIcon } from './icons/RotateCcwIcon';
 
 interface InputFormProps {
   onSubmit: (options: PromptOptions) => void;
@@ -87,6 +88,19 @@ export const InputForm = forwardRef<InputFormHandles, InputFormProps>(({ onSubmi
     e.preventDefault();
     onSubmit({ subject, style, setting, colorPalette, music, soundEffects, dialogue, videoLength, aspectRatio, cameraAngles });
   };
+
+  const handleClearForm = () => {
+    setSubject('');
+    setStyle(ART_STYLES[0].value);
+    setSetting('');
+    setColorPalette('');
+    setMusic('');
+    setSoundEffects('');
+    setDialogue(initialDialogue);
+    setVideoLength(8);
+    setAspectRatio(ASPECT_RATIOS[0].value);
+    setCameraAngles(initialShots);
+  };
   
   const handleAngleChange = (index: number, value: string) => {
     const newAngles = [...cameraAngles];
@@ -163,13 +177,29 @@ export const InputForm = forwardRef<InputFormHandles, InputFormProps>(({ onSubmi
   // Expose function to parent via ref
   useImperativeHandle(ref, () => ({
     async triggerAllSuggestions() {
-      await handleSuggestSubject();
+      await Promise.all([
+        handleSuggestSubject(),
+        handleSuggestSetting(),
+        handleSuggestColorPalette(),
+        handleSuggestMusic(),
+        handleSuggestSoundEffects(),
+        handleSuggestDialogue()
+      ]);
+       // Style is separate as it has a datalist which may not be a random suggestion
       await handleSuggestStyle();
-      await handleSuggestSetting();
-      await handleSuggestColorPalette();
-      await handleSuggestMusic();
-      await handleSuggestSoundEffects();
-      await handleSuggestDialogue();
+    },
+    setFormState(options: PromptOptions) {
+      setSubject(options.subject);
+      setStyle(options.style);
+      setSetting(options.setting);
+      setColorPalette(options.colorPalette);
+      setMusic(options.music);
+      setSoundEffects(options.soundEffects);
+      // Ensure dialogue is always an array, even if empty in history
+      setDialogue(options.dialogue && options.dialogue.length > 0 ? options.dialogue : initialDialogue);
+      setVideoLength(options.videoLength);
+      setAspectRatio(options.aspectRatio);
+      setCameraAngles(options.cameraAngles);
     },
   }));
 
@@ -319,7 +349,16 @@ export const InputForm = forwardRef<InputFormHandles, InputFormProps>(({ onSubmi
         </div>
       </div>
       
-      <div className="pt-4">
+      <div className="pt-4 flex items-center gap-4">
+        <button
+          type="button"
+          onClick={handleClearForm}
+          disabled={isLoading}
+          className="bg-gray-600 hover:bg-gray-500 text-white font-bold py-3 px-4 rounded-lg shadow-lg transition-colors duration-200 ease-in-out disabled:opacity-50"
+          title={T.form.clearButton}
+        >
+          <RotateCcwIcon className="w-6 h-6" />
+        </button>
         <button type="submit" disabled={isLoading} className="w-full flex justify-center items-center space-x-3 bg-gradient-to-r from-indigo-500 to-purple-600 hover:from-indigo-600 hover:to-purple-700 text-white font-bold py-3 px-4 rounded-lg shadow-lg transition-all duration-300 ease-in-out transform hover:scale-105 disabled:opacity-50 disabled:cursor-not-allowed disabled:transform-none">
           {isLoading ? (
             <>

@@ -41,7 +41,7 @@ export const generateVideoPrompt = async (options: PromptOptions, lang: Language
 
 
   const prompt = `
-    You are an expert AI video director named "Jason". Your task is to create a detailed shot list for a short-form video for platforms like TikTok or Reels, designed for AI video generators like Sora and Veo.
+    You are an expert AI video director named "Jason". Your task is to create a detailed shot list for a short-form video for platforms like TikTok or Reels, designed for an AI video generator like Sora or Veo.
     The final output must be in JSON format, adhering to the provided schema.
     All text descriptions in the JSON output (title, overall_prompt, shot descriptions) must be in ${promptLanguage}.
 
@@ -84,6 +84,42 @@ ${dialogueString || 'None'}
     throw new Error(UI_TEXTS[lang].error.geminiError);
   }
 };
+
+export const translatePrompt = async (
+  promptToTranslate: GeneratedPrompt,
+  targetLang: Language
+): Promise<GeneratedPrompt> => {
+  const targetLanguage = targetLang === 'ko' ? 'Korean' : 'English';
+  const prompt = `
+    You are an expert multilingual translator. Your task is to translate specific text fields within a JSON object to ${targetLanguage}.
+    You must only translate the 'title', 'overall_prompt', and the 'description' field for each object inside the 'shots' array.
+    Maintain the exact original JSON structure, including all other fields and data types ('shot_number', 'camera_angle', 'duration_seconds', 'total_duration_seconds', 'aspect_ratio').
+    The final output MUST be only the translated JSON object, without any surrounding text, explanations, or markdown formatting.
+
+    Original JSON object to translate:
+    ${JSON.stringify(promptToTranslate)}
+  `;
+
+  try {
+    const response = await ai.models.generateContent({
+      model: "gemini-2.5-flash",
+      contents: prompt,
+      config: {
+        responseMimeType: "application/json",
+        responseSchema: responseSchema, // Reuse the same schema to enforce structure
+      },
+    });
+
+    const jsonText = response.text.trim();
+    const cleanedJsonText = jsonText.replace(/^```json\s*|```$/g, '');
+    return JSON.parse(cleanedJsonText) as GeneratedPrompt;
+  } catch (error) {
+    console.error("Gemini translation API call failed:", error);
+    // Use the target language for the error message
+    throw new Error(UI_TEXTS[targetLang].error.geminiError);
+  }
+};
+
 
 export const generateSuggestion = async (
   fieldType: 'subject' | 'style' | 'setting' | 'colorPalette' | 'music' | 'soundEffects' | 'dialogue',

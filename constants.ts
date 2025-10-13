@@ -28,6 +28,7 @@ export const UI_TEXTS = {
       shots: "컷 상세 설정 (10컷)",
       shotLabel: "컷",
       randomizeButton: "랜덤 앵글 추천",
+      clearButton: "양식 초기화",
     },
     output: {
       title: "생성된 프롬프트",
@@ -37,6 +38,17 @@ export const UI_TEXTS = {
       promptTab: "통합 프롬프트",
       waiting: "아래 양식을 입력하고 '프롬프트 생성'을 클릭하여 시작하세요.",
       loading: "AI 프로듀서 제이슨이 창의력을 발휘하는 중...",
+      translateButton: "영어로 번역",
+      translatingButton: "번역 중...",
+      showOriginalButton: "원본 보기",
+      clearButton: "결과 지우기",
+    },
+    history: {
+      title: "생성 기록",
+      empty: "아직 생성된 프롬프트가 없습니다.",
+      load: "불러오기",
+      delete: "삭제",
+      clearAll: "전체 삭제",
     },
     error: {
       title: "오류가 발생했습니다",
@@ -76,6 +88,7 @@ export const UI_TEXTS = {
       shots: "Shot Details (10 Cuts)",
       shotLabel: "Cut",
       randomizeButton: "Suggest Random Angles",
+      clearButton: "Clear Form",
     },
     output: {
       title: "Generated Prompt",
@@ -85,6 +98,17 @@ export const UI_TEXTS = {
       promptTab: "Combined Prompt",
       waiting: "Fill out the form below and click 'Generate Prompt' to begin.",
       loading: "AI Producer Jason is working his creative magic...",
+      translateButton: "Translate to Korean",
+      translatingButton: "Translating...",
+      showOriginalButton: "Show Original",
+      clearButton: "Clear Output",
+    },
+    history: {
+      title: "History",
+      empty: "No prompts generated yet.",
+      load: "Load",
+      delete: "Delete",
+      clearAll: "Clear All",
     },
     error: {
       title: "An Error Occurred",

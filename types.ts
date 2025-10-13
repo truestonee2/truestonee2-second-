@@ -35,4 +35,12 @@ export interface GeneratedPrompt {
 
 export interface InputFormHandles {
   triggerAllSuggestions: () => Promise<void>;
+  setFormState: (options: PromptOptions) => void;
+}
+
+export interface HistoryItem {
+  id: string;
+  timestamp: number;
+  options: PromptOptions;
+  result: GeneratedPrompt;
 }

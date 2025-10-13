@@ -1,18 +1,59 @@
-
 import React, { useState, useEffect } from 'react';
-import { type GeneratedPrompt } from '../types';
+import { type GeneratedPrompt, type Language } from '../types';
+import { translatePrompt } from '../services/geminiService';
 import { CopyIcon } from './icons/CopyIcon';
 import { CheckIcon } from './icons/CheckIcon';
+import { LanguagesIcon } from './icons/LanguagesIcon';
+import { TrashIcon } from './icons/TrashIcon';
 
 interface OutputDisplayProps {
   prompt: GeneratedPrompt | null;
   isLoading: boolean;
   error: string | null;
   T: any;
+  language: Language;
+  onClear: () => void;
 }
 
-export const OutputDisplay: React.FC<OutputDisplayProps> = ({ prompt, isLoading, error, T }) => {
+export const OutputDisplay: React.FC<OutputDisplayProps> = ({ prompt, isLoading, error, T, language, onClear }) => {
   const [activeTab, setActiveTab] = useState<'prompt' | 'json'>('prompt');
+  const [translatedPrompt, setTranslatedPrompt] = useState<GeneratedPrompt | null>(null);
+  const [isTranslatedView, setIsTranslatedView] = useState(false);
+  const [isTranslating, setIsTranslating] = useState(false);
+
+  // Reset translation state when a new prompt is generated
+  useEffect(() => {
+    setTranslatedPrompt(null);
+    setIsTranslatedView(false);
+    setIsTranslating(false);
+  }, [prompt]);
+
+  const handleTranslate = async () => {
+    if (!prompt) return;
+
+    if (isTranslatedView) {
+      setIsTranslatedView(false);
+      return;
+    }
+
+    if (translatedPrompt) {
+      setIsTranslatedView(true);
+      return;
+    }
+
+    setIsTranslating(true);
+    try {
+      const targetLang = language === 'ko' ? 'en' : 'ko';
+      const result = await translatePrompt(prompt, targetLang);
+      setTranslatedPrompt(result);
+      setIsTranslatedView(true);
+    } catch (err) {
+      console.error("Translation failed:", err);
+      // Optionally: display a toast or small error message for translation failure
+    } finally {
+      setIsTranslating(false);
+    }
+  };
   
   const renderContent = () => {
     if (isLoading) {
@@ -27,18 +68,57 @@ export const OutputDisplay: React.FC<OutputDisplayProps> = ({ prompt, isLoading,
     }
     if (error) {
       return (
-        <div className="p-8 text-center">
+        <div className="p-8 text-center relative">
+          <div className="absolute top-3 right-3">
+             <button
+                onClick={onClear}
+                className="bg-gray-700/80 backdrop-blur-sm hover:bg-red-600/80 px-3 py-2 rounded-lg text-sm transition-all flex items-center gap-2 text-gray-300 hover:text-white"
+             >
+                <TrashIcon className="w-4 h-4" />
+                <span>{T.output.clearButton}</span>
+             </button>
+          </div>
           <h3 className="text-xl font-bold text-red-400">{T.error.title}</h3>
           <p className="mt-2 text-red-300 bg-red-900/50 p-4 rounded-lg">{error}</p>
         </div>
       );
     }
     if (prompt) {
-      const contentToDisplay = activeTab === 'json' ? JSON.stringify(prompt, null, 2) : prompt.overall_prompt;
+      const currentPrompt = isTranslatedView ? translatedPrompt : prompt;
+      const contentToDisplay = activeTab === 'json' 
+        ? JSON.stringify(currentPrompt, null, 2) 
+        : currentPrompt?.overall_prompt ?? '';
+        
       return (
         <div className="relative">
-          <CopyButton textToCopy={contentToDisplay} T={T} />
-          <pre className="bg-gray-900/70 p-6 rounded-b-lg text-left text-sm whitespace-pre-wrap overflow-x-auto font-mono leading-relaxed text-indigo-200">
+          <div className="absolute top-3 right-3 flex items-center gap-2 z-10">
+            <button 
+              onClick={handleTranslate} 
+              disabled={isTranslating}
+              className="bg-gray-700/80 backdrop-blur-sm hover:bg-gray-600/80 px-3 py-2 rounded-lg text-sm transition-all flex items-center gap-2 text-gray-300 disabled:opacity-50 disabled:cursor-wait"
+            >
+              {isTranslating ? (
+                <>
+                  <div className="animate-spin rounded-full h-4 w-4 border-b-2 border-white"></div>
+                  <span>{T.output.translatingButton}</span>
+                </>
+              ) : (
+                <>
+                  <LanguagesIcon className="w-4 h-4" />
+                  <span>{isTranslatedView ? T.output.showOriginalButton : T.output.translateButton}</span>
+                </>
+              )}
+            </button>
+            <CopyButton textToCopy={contentToDisplay} T={T} />
+            <button
+                onClick={onClear}
+                className="bg-gray-700/80 backdrop-blur-sm hover:bg-red-600/80 px-3 py-2 rounded-lg text-sm transition-all flex items-center gap-2 text-gray-300 hover:text-white"
+            >
+                <TrashIcon className="w-4 h-4" />
+                <span>{T.output.clearButton}</span>
+            </button>
+          </div>
+          <pre className="bg-gray-900/70 p-6 rounded-b-lg text-left text-sm whitespace-pre-wrap overflow-x-auto font-mono leading-relaxed text-indigo-200 pt-16">
             <code>{contentToDisplay}</code>
           </pre>
         </div>
@@ -83,17 +163,17 @@ const CopyButton: React.FC<{ textToCopy: string, T: any }> = ({ textToCopy, T })
   }, [isCopied]);
 
   return (
-    <button onClick={handleCopy} className={`absolute top-4 right-4 bg-gray-700 hover:bg-gray-600 p-2 rounded-lg transition-all ${isCopied ? 'text-green-400' : 'text-gray-300'}`}>
+    <button onClick={handleCopy} className={`bg-gray-700/80 backdrop-blur-sm hover:bg-gray-600/80 px-3 py-2 rounded-lg text-sm transition-all flex items-center gap-2 ${isCopied ? 'text-green-400' : 'text-gray-300'}`}>
       {isCopied ? (
-        <div className="flex items-center space-x-2">
-          <CheckIcon className="w-5 h-5" />
+        <>
+          <CheckIcon className="w-4 h-4" />
           <span>{T.output.copiedButton}</span>
-        </div>
+        </>
       ) : (
-        <div className="flex items-center space-x-2">
-          <CopyIcon className="w-5 h-5" />
+        <>
+          <CopyIcon className="w-4 h-4" />
           <span>{T.output.copyButton}</span>
-        </div>
+        </>
       )}
     </button>
   );
